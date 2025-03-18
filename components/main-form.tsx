@@ -22,7 +22,7 @@ import {
 } from "@/lib/schemas";
 import {encodeFileAsBase64} from "@/lib/utils";
 import {AVAILABLE_MODES} from "@/utils/constants";
-import {capitalizeString} from "@/utils/helpers";
+import {capitalizeString, saveToLocalStorage} from "@/utils/helpers";
 import {ModeType} from "@/utils/types";
 import {experimental_useObject} from "ai/react";
 import {Loader2} from "lucide-react";
@@ -78,10 +78,13 @@ export default function MainForm({
       if (!object) return;
       if (mode === AVAILABLE_MODES.QUIZ) {
         setQuizQuestions(object as Question[]);
+        saveToLocalStorage("savedQuizzes", object);
       } else if (mode === AVAILABLE_MODES.FLASHCARDS) {
         setFlashcards(object as Flashcard[]);
+        saveToLocalStorage("savedFlashcards", object);
       } else if (mode === AVAILABLE_MODES.MATCHING) {
         setMatchingPairs(object as MatchingPair[]);
+        saveToLocalStorage("savedMatchingGames", object);
       }
     },
   });

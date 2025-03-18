@@ -8,3 +8,7 @@ export function shuffleArray<T>(array: T[]): T[] {
 export function capitalizeString(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
+
+export const saveToLocalStorage = (key: string, data: any) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};

@@ -64,7 +64,7 @@ export default function Flashcards({
                 animate={{rotateY: 0, opacity: 1}}
                 exit={{rotateY: 90, opacity: 0}}
                 transition={{duration: 0.4}}
-                className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center bg-primary text-black rounded-lg"
+                className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center bg-blue-500 text-black rounded-lg"
               >
                 <span className="text-lg font-semibold opacity-90">
                   {currentCard.category || "General"}

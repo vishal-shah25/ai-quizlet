@@ -1,5 +1,6 @@
 "use client";
 
+import Header from "@/components/header";
 import MainForm from "@/components/main-form";
 import Flashcards from "@/components/modes/flashcards";
 import MatchingGame from "@/components/modes/matching-game";
@@ -21,26 +22,9 @@ export default function Home() {
     setMatchingPairs([]);
   };
 
-  // const modeConfig = {
-  //   quiz: {
-  //     component: Quiz,
-  //     title: title ?? "Quiz",
-  //     data: quizQuestions,
-  //   },
-  //   flashcards: {
-  //     component: Flashcards,
-  //     title: title ?? "Flashcards",
-  //     data: flashcards,
-  //   },
-  //   matching: {
-  //     component: MatchingGame,
-  //     title: title ?? "Matching Game",
-  //     data: matchingPairs,
-  //   },
-  // };
-
   return (
     <>
+      <Header />
       {mode === "quiz" && quizQuestions.length >= 4 ? (
         <Quiz
           title={title ?? "Quiz"}

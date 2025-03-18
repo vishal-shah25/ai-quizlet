@@ -1,15 +1,16 @@
 import "./globals.css";
-import { Metadata } from "next";
-import { Toaster } from "sonner";
-import { ThemeProvider } from "next-themes";
-import { Geist } from "next/font/google";
+import {Metadata} from "next";
+import {Toaster} from "sonner";
+import {ThemeProvider} from "next-themes";
+import {Geist} from "next/font/google";
 
-const geist = Geist({ subsets: ["latin"] });
+const geist = Geist({subsets: ["latin"]});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ai-sdk-preview-pdf-support.vercel.app"),
   title: "Gemini AI Quizlet",
-  description: "Generate different kinds of quizes, flashcards , etc by uploading your own PDF",
+  description:
+    "Generate different kinds of quizes, flashcards , etc by uploading your own PDF",
 };
 
 export default function RootLayout({

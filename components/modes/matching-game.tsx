@@ -2,8 +2,8 @@
 
 import {Button} from "@/components/ui/button";
 import {MatchingPair} from "@/lib/schemas";
-import {shuffleArray} from "@/utils/helpers";
-import {motion, AnimatePresence} from "framer-motion";
+import {saveToLocalStorage, shuffleArray} from "@/utils/helpers";
+import {AnimatePresence, motion} from "framer-motion";
 import {useEffect, useState} from "react";
 
 interface MatchingGameProps {
@@ -101,7 +101,7 @@ export default function MatchingGame({
       // Check if it's a new best time
       if (!bestTime || elapsed < bestTime) {
         setBestTime(elapsed);
-        localStorage.setItem("bestTime", elapsed.toString());
+        saveToLocalStorage("bestTime", elapsed.toString());
         setIsNewBestTime(true);
       }
     }
