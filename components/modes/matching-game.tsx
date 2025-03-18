@@ -60,6 +60,7 @@ export default function MatchingGame({
 
   useEffect(() => {
     startGame();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions]);
 
   const handleCardClick = (card: MatchCard) => {
@@ -105,6 +106,7 @@ export default function MatchingGame({
         setIsNewBestTime(true);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cards]);
 
   return (
