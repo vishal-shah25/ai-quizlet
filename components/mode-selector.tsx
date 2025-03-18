@@ -1,25 +1,25 @@
 import {Button} from "@/components/ui/button";
+import {AVAILABLE_MODES} from "@/utils/constants";
+import {capitalizeString} from "@/utils/helpers";
+import {ModeType} from "@/utils/types";
 
 interface ModeSelectorProps {
-  mode: "flashcards" | "quiz";
-  setMode: (mode: "flashcards" | "quiz") => void;
+  mode: ModeType;
+  setMode: (mode: ModeType) => void;
 }
 
 export default function ModeSelector({mode, setMode}: ModeSelectorProps) {
   return (
     <div className="flex justify-center gap-3 mb-4">
-      <Button
-        variant={mode === "quiz" ? "default" : "outline"}
-        onClick={() => setMode("quiz")}
-      >
-        Quiz Mode
-      </Button>
-      <Button
-        variant={mode === "flashcards" ? "default" : "outline"}
-        onClick={() => setMode("flashcards")}
-      >
-        Flashcards Mode
-      </Button>
+      {Object.values(AVAILABLE_MODES).map((value) => (
+        <Button
+          key={value}
+          variant={mode === value ? "default" : "outline"}
+          onClick={() => setMode(value)}
+        >
+          {capitalizeString(value)}
+        </Button>
+      ))}
     </div>
   );
 }

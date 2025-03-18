@@ -10,9 +10,9 @@ import {
   RefreshCw,
   FileText,
 } from "lucide-react";
-import QuizScore from "./score";
-import QuizReview from "./quiz-overview";
 import { Question } from "@/lib/schemas";
+import QuizScore from '../score';
+import QuizReview from '../quiz-overview';
 
 type QuizProps = {
   questions: Question[];

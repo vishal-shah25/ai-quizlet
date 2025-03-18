@@ -1,6 +1,6 @@
 "use client";
 
-import {generateQuizTitle} from "@/app/(preview)/actions";
+import {generateTitle} from "@/app/(preview)/actions";
 import LoadingProgress from "@/components/loading-progress";
 import ModeSelector from "@/components/mode-selector";
 import PdfUpload from "@/components/pdf-upload";
@@ -15,10 +15,15 @@ import {
 import {
   Flashcard,
   flashcardsSchema,
+  matchingGameSchema,
+  MatchingPair,
   Question,
   questionsSchema,
 } from "@/lib/schemas";
 import {encodeFileAsBase64} from "@/lib/utils";
+import {AVAILABLE_MODES} from "@/utils/constants";
+import {capitalizeString} from "@/utils/helpers";
+import {ModeType} from "@/utils/types";
 import {experimental_useObject} from "ai/react";
 import {Loader2} from "lucide-react";
 import {useState} from "react";
@@ -28,36 +33,67 @@ import {z} from "zod";
 export default function MainForm({
   setQuizQuestions,
   setFlashcards,
+  setMatchingPairs,
   setTitle,
+  mode,
+  setMode,
 }: {
   setQuizQuestions: (questions: Question[]) => void;
   setFlashcards: (flashcards: Flashcard[]) => void;
+  setMatchingPairs: (matchingPairs: MatchingPair[]) => void;
   setTitle: (title: string) => void;
+  mode: ModeType;
+  setMode: (mode: ModeType) => void;
 }) {
   const [files, setFiles] = useState<File[]>([]);
-  const [mode, setMode] = useState<"flashcards" | "quiz">("quiz");
+
+  const modeConfig = {
+    quiz: {
+      api: "/api/generate-quiz",
+      schema: questionsSchema,
+    },
+    flashcards: {
+      api: "/api/generate-flashcards",
+      schema: flashcardsSchema,
+    },
+    matching: {
+      api: "/api/generate-matching-pairs",
+      schema: matchingGameSchema,
+    },
+  };
 
   const {submit, object, isLoading} = experimental_useObject({
-    api: mode === "quiz" ? "/api/generate-quiz" : "/api/generate-flashcards",
-    schema: (mode === "quiz" ? questionsSchema : flashcardsSchema) as z.ZodType<
-      Question[] | Flashcard[]
+    api: modeConfig[mode].api,
+    schema: modeConfig[mode].schema as z.ZodType<
+      Question[] | Flashcard[] | MatchingPair[]
     >,
     initialValue: undefined,
     onError: () => {
-      toast.error(`Failed to generate ${mode}. Please try again.`);
+      toast.error(
+        `Failed to generate ${capitalizeString(mode)}. Please try again.`,
+      );
       setFiles([]);
     },
     onFinish: ({object}) => {
-      if (mode === "quiz") {
+      if (!object) return;
+      if (mode === AVAILABLE_MODES.QUIZ) {
         setQuizQuestions(object as Question[]);
-      } else {
+      } else if (mode === AVAILABLE_MODES.FLASHCARDS) {
         setFlashcards(object as Flashcard[]);
+      } else if (mode === AVAILABLE_MODES.MATCHING) {
+        setMatchingPairs(object as MatchingPair[]);
       }
     },
   });
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (files.length === 0) {
+      toast.error("Please upload a PDF before generating.");
+      return;
+    }
 
     const encodedFiles = await Promise.all(
       files.map(async (file) => ({
@@ -67,11 +103,11 @@ export default function MainForm({
       })),
     );
 
-    setTitle(await generateQuizTitle(encodedFiles[0].name));
+    // Generate title for the questions
+    const generatedTitle = await generateTitle(encodedFiles[0].name, mode);
+    setTitle(generatedTitle);
     submit({files: encodedFiles});
   };
-
-  const progress = object ? (object.length / 4) * 100 : 0;
 
   return (
     <div className="flex items-center justify-center min-h-screen w-full">
@@ -91,14 +127,14 @@ export default function MainForm({
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                `Generate ${mode}`
+                `Generate ${capitalizeString(mode)}`
               )}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <LoadingProgress
-            progress={progress}
+            progress={object ? (object.length / 4) * 100 : 0}
             isLoading={isLoading}
             partialCount={object?.length}
           />

@@ -14,13 +14,15 @@ export async function POST(req: Request) {
       {
         role: "system",
         content: `
-            You are an AI assistant that extracts key concepts from documents.
-            Your task is to create high-quality flashcards with:
+           You are a teacher. Your job is to take a document and create high-quality flashcards based on the content of the document.
+
+           Each flashcard should contain:
             - A **term** (key concept)
             - A **concise definition**
             - An **optional example**
             - An **optional category**
-            Generate at least 4 flashcards.
+
+            Generate at least 4 and at most 20 flashcards.
           `,
       },
       {

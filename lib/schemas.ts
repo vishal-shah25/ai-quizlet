@@ -34,8 +34,15 @@ export const flashcardSchema = z.object({
     .describe("An optional category, such as 'Biology' or 'Math'."),
 });
 
+export const matchingPairSchema = z.object({
+  term: z.string().describe("A key concept or term to be matched."),
+  match: z.string().describe("The corresponding correct match for the term."),
+});
+
 export type Question = z.infer<typeof questionSchema>;
 export type Flashcard = z.infer<typeof flashcardSchema>;
+export type MatchingPair = z.infer<typeof matchingPairSchema>;
 
-export const questionsSchema = z.array(questionSchema).length(4);
+export const questionsSchema = z.array(questionSchema).min(4).max(12);
 export const flashcardsSchema = z.array(flashcardSchema).min(4).max(20);
+export const matchingGameSchema = z.array(matchingPairSchema).length(6);
